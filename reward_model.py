@@ -15,6 +15,7 @@ class RewardModel(object):
     mustar: float
     
     def __init__(self, mu: NDArray[np.float64]):
+        mu = np.array(mu)
         assert len(mu.flatten().shape) == 1, "mu needs to be a 1-D vector"
         self.mu = mu.flatten().copy()
         self.K = len(self.mu)
