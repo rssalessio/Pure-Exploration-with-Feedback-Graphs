@@ -1,6 +1,6 @@
 import numpy as np
 from graph import Graph
-from reward_model import RewardModel
+from baifg.model.reward_model import RewardModel
 
 
 class FeedbackGraph(object):
