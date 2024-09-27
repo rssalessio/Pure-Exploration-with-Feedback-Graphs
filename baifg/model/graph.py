@@ -1,5 +1,6 @@
 import numpy as np
 from numpy.typing import NDArray
+from typing import List
 
 
 
@@ -20,12 +21,12 @@ class Graph(object):
             if np.any(self.G[:,i] > 0):
                 self.observable_vertices.add(i)
 
-    def get_in_neighborhood(self, u: int) -> NDArray[np.int64]:
+    def get_in_neighborhood(self, u: int) -> List[np.int64]:
         assert u < self.K, f'u={u} is not in the vertex of size {self.K}'
-        return np.argwhere(self.G[:,u] > 0).flatten()
+        return np.argwhere(self.G[:,u] > 0).flatten().tolist()
 
-    def get_out_neighborhood(self, u: int) -> NDArray[np.int64]:
+    def get_out_neighborhood(self, u: int) -> List[np.int64]:
         assert u < self.K, f'u={u} is not in the vertex of size {self.K}'
-        return np.argwhere(self.G[u,:] > 0).flatten()
+        return np.argwhere(self.G[u,:] > 0).flatten().tolist()
     
     

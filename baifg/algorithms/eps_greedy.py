@@ -6,18 +6,18 @@ from baifg.model.feedback_graph import FeedbackGraph
 from baifg.algorithms.base_algorithm import BaseAlg, Experience, Observable
 
 
-class Exp3GParameters(NamedTuple):
+class EpsilonGreedyParameters(NamedTuple):
     learn_rate: float
     exp_rate: float
 
-class Exp3G(BaseAlg):
-    """ Implements the EXP3.G algorithm (@see https://arxiv.org/pdf/1502.07617) """
-    params: Exp3GParameters
+class EpsilonGreedy(BaseAlg):
+    """ Implements an epsilon-greedy algorithm """
+    params: EpsilonGreedyParameters
     q: NDArray[np.float64]
     p: NDArray[np.float64]
 
-    def __init__(self, fg: FeedbackGraph, parameters: Exp3GParameters):
-        super().__init__("EXP3.G", fg)
+    def __init__(self, fg: FeedbackGraph, parameters: EpsilonGreedyParameters):
+        super().__init__("Epsilon-greedy", fg)
         self.params = parameters
     
         self.q = np.ones(self.fg.K) / self.fg.K
