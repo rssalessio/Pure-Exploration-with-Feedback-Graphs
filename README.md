@@ -6,5 +6,9 @@ The following libraries are required: `numpy, tqdm, scipy, matplotlib, cvxpy, se
 Make sure to have latex installed to properly plot the figures.
 
 ## Example of symmetric feedback graph
-To evalute the example of a symmetric feedback graph please refer to the notebook `example_symmetric_graph.ipynb`.
+To evaluate the example of a symmetric feedback graph please refer to the notebook `example_symmetric_graph.ipynb`.
+
+
+## Example of the loopy star graph
+To evaluate the example of a symmetric feedback graph please refer to the notebook `example_loopystar.ipynb`.
 
