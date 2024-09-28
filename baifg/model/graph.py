@@ -17,7 +17,18 @@ class Graph(object):
         self.K = G.shape[0]
         self.vertices = set([i for i in range(self.K)])
         self.observable_vertices = set([])
+        self.update_observable_vertices()
 
+    def update_graph(self, G: NDArray[np.float64]):
+        """ The graph should only be updated through this function to
+            ensure that we update the set of observable vertices
+        """
+        assert len(G.shape) == 2 and G.shape[0] == G.shape[1], "G needs to be a square matrix"
+        assert G.shape[0] == self.K, "New matrix is not equivalent to the previousone"
+        self.G = G.copy()
+        self.update_observable_vertices()
+
+    def update_observable_vertices(self):
         # Compute observable vertices
         for i in range(self.K):
             if np.any(self.G[:,i] > 0):
@@ -31,4 +42,4 @@ class Graph(object):
         assert u < self.K, f'u={u} is not in the vertex of size {self.K}'
         return np.argwhere(self.G[u,:] > 0).flatten().tolist()
     
-    
+

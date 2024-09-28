@@ -1,41 +1,33 @@
 import numpy as np
 from typing import NamedTuple
-from numpy.typing import NDArray
 
-from baifg.model.feedback_graph import FeedbackGraph
-from baifg.algorithms.base_algorithm import BaseAlg, Experience, Observable
+from baifg.algorithms.base.base_algorithm import BaseAlg, Experience, Observable
+from baifg.algorithms.base.graph_estimator import GraphEstimator
 
 
 class EpsilonGreedyParameters(NamedTuple):
-    learn_rate: float
+    """ Exploration rate """
     exp_rate: float
 
 class EpsilonGreedy(BaseAlg):
     """ Implements an epsilon-greedy algorithm """
     params: EpsilonGreedyParameters
-    q: NDArray[np.float64]
-    p: NDArray[np.float64]
 
-    def __init__(self, fg: FeedbackGraph, parameters: EpsilonGreedyParameters):
-        super().__init__("Epsilon-greedy", fg)
+    def __init__(self, graph: GraphEstimator, parameters: EpsilonGreedyParameters):
+        super().__init__("Epsilon-greedy", graph)
         self.params = parameters
-    
-        self.q = np.ones(self.fg.K) / self.fg.K
-        self.p = np.ones(self.fg.K) / self.fg.K
-    
+
     def sample(self) -> int:
-        self.p = (1 - self.params.exp_rate) * self.q + self.params.exp_rate / self.fg.K
-        return np.random.choice(self.fg.K, p=self.p)
+        """ Sample according to epsilon-greedy strategy. 
+            That is, with probability epsilon we sample a random vertex.
+            Otherwise we find  the vertex `m` with highest reward
+            and then we select the vertex `u` with highest probability G_{u,m}
+        """
+        if np.random.rand() < self.params.exp_rate:
+            return np.random.choice(self.graph.K)
+        
+        m = self.reward.mu.argmax()
+        return self.graph.G[:,m].argmax()
     
-    def backward(self, experience: Experience):
-        losses = np.zeros(self.fg.K)
-        for obs in experience.observables:
-            assert experience.vertex == obs.in_vertex, "Experience vertex and in_vertex do not coincide"
-
-            Nin_out = self.fg.graph.get_in_neighborhood(obs.out_vertex)
-            Pout = self.p[Nin_out].sum()
-            losses[obs.out_vertex] = -obs.observed_value / Pout
-        qtemp = self.q * np.exp(- self.params.learn_rate * losses)
-        self.q = qtemp / qtemp.sum()
-
-    
+    def _backward_impl(self, experience: Experience):
+        pass

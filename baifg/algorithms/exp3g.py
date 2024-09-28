@@ -3,7 +3,7 @@ from typing import NamedTuple
 from numpy.typing import NDArray
 
 from baifg.model.feedback_graph import FeedbackGraph
-from baifg.algorithms.base_algorithm import BaseAlg, Experience, Observable
+from baifg.algorithms.base.base_algorithm import BaseAlg, Experience
 
 
 class Exp3GParameters(NamedTuple):
