@@ -32,6 +32,10 @@ class BaseAlg(ABC):
     def sample(self) -> int:
         raise NotImplementedError("Sample function not imlpemented")
     
+    @property
+    def estimated_best_vertex(self) -> int:
+        return self.reward.mu.argmax()
+    
     def should_stop(self) -> bool:
         if self.time < self.K: return False
         beta = np.log((1 + np.log(self.time)) / self.delta)
