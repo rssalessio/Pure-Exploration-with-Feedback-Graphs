@@ -15,15 +15,16 @@ class RewardModel(object):
     mustar: float
     
     def __init__(self, mu: NDArray[np.float64]):
+        self.update_reward(mu)
+        self.K = len(self.mu)
+
+    def update_reward(self, mu: NDArray[np.float64]):
         mu = np.array(mu)
         assert len(mu.flatten().shape) == 1, "mu needs to be a 1-D vector"
         self.mu = mu.flatten().copy()
-        self.K = len(self.mu)
-
         self.astar = np.argmax(self.mu)
         self.mustar = self.mu[self.astar]
         self.gaps = self.mu - self.mustar
-
 
 class GaussianRewardModel(RewardModel):
     reward_type: RewardType = RewardType.GAUSSIAN

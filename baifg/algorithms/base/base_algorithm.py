@@ -3,6 +3,7 @@ from baifg.model.feedback_graph import FeedbackGraph
 from baifg.algorithms.base.graph_estimator import GraphEstimator
 from baifg.algorithms.base.reward_estimator import RewardEstimator
 from baifg.model.experience import Experience, Observable
+from baifg.utils.characteristic_time import evaluate_characteristic_time
 from typing import NamedTuple, List, Tuple
 from abc import abstractmethod, ABC
 from numpy.typing import NDArray
@@ -16,8 +17,10 @@ class BaseAlg(ABC):
     N: NDArray[np.float64]
     K: int
     time: int
+    delta: float
 
-    def __init__(self, name: str, graph: GraphEstimator):
+    def __init__(self, name: str, graph: GraphEstimator, delta: float):
+        assert delta > 0, 'delta needs to be strictly positive'
         self.NAME = name
         self.graph = graph
         self.reward = RewardEstimator(graph.K, informed=graph.informed)
@@ -28,6 +31,13 @@ class BaseAlg(ABC):
     @abstractmethod
     def sample(self) -> int:
         raise NotImplementedError("Sample function not imlpemented")
+    
+    def should_stop(self) -> bool:
+        if self.time < self.K: return False
+        beta = np.log((1 + np.log(self.time)) / self.delta)
+        fg = FeedbackGraph(reward_model=self.reward, graph=self.graph)
+        Lt = self.time / max(1, evaluate_characteristic_time(self.N / self.N.sum(), fg))
+        return Lt >= beta
 
     def backward(self, experience: Experience):
         self.N[experience.vertex] += 1
