@@ -1,5 +1,5 @@
 import numpy as np
-from graph import Graph
+from baifg.model.graph import Graph
 from baifg.model.reward_model import RewardModel
 
 

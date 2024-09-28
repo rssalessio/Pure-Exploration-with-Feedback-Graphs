@@ -1,11 +1,17 @@
 import cvxpy as cp
 import numpy as np
 
+from typing import NamedTuple
 from numpy.typing import NDArray
-from reward_model import RewardType
-from feedback_graph import FeedbackGraph
+from baifg.model.reward_model import RewardType
+from baifg.model.feedback_graph import FeedbackGraph
 
-def compute_characteristic_time(fg: FeedbackGraph):
+class CharacteriticTimeSolution(NamedTuple):
+    value: float
+    wstar: NDArray[np.float64]
+    mstar: NDArray[np.float64]
+
+def compute_characteristic_time(fg: FeedbackGraph) -> CharacteriticTimeSolution:
     if fg.reward_model.reward_type == RewardType.GAUSSIAN:
         return compute_characteristic_time_gaussian(fg)
     raise Exception("Only gaussian rewards are implemented")
@@ -16,7 +22,7 @@ def evaluate_characteristic_time(w: NDArray[np.float64], fg: FeedbackGraph) -> f
     raise Exception("Only gaussian rewards are implemented")
     
 
-def compute_characteristic_time_gaussian(fg: FeedbackGraph):
+def compute_characteristic_time_gaussian(fg: FeedbackGraph) -> CharacteriticTimeSolution:
     astar = fg.reward_model.astar
     var = fg.reward_model.sigma ** 2
 
@@ -38,7 +44,7 @@ def compute_characteristic_time_gaussian(fg: FeedbackGraph):
     obj = cp.Minimize(p)
     problem = cp.Problem(obj, constraints)
     sol = problem.solve()
-    return (sol, w.value, m.value, p.value)
+    return CharacteriticTimeSolution(sol, w.value, m.value)
 
 
 def evaluate_characteristic_time_gaussian(w: NDArray[np.float64], fg: FeedbackGraph) -> float:
