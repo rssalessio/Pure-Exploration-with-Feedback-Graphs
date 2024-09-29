@@ -2,7 +2,7 @@
 
 ## Libraries
 
-The following libraries are required: `numpy, tqdm, scipy, matplotlib, cvxpy, seaborn, latex`. For a complete list, check also the `requirement.txt` file.
+The following libraries are required: `pandas, numpy, tqdm, scipy, matplotlib, cvxpy, seaborn, latex`. For a complete list, check also the `requirement.txt` file.
 
 Make sure to have latex installed to properly plot the figures.
 
