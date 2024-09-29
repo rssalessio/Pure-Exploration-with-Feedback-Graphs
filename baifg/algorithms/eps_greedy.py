@@ -9,6 +9,10 @@ from baifg.algorithms.base.reward_estimator import RewardType
 class EpsilonGreedyParameters(NamedTuple):
     """ Exploration rate """
     exp_rate: float
+    """ If false, runs basic epsilon greedy. If true
+        runs the graph aware version
+    """
+    graph_aware: bool
 
 class EpsilonGreedy(BaseAlg):
     """ Implements an epsilon-greedy algorithm """
@@ -27,8 +31,15 @@ class EpsilonGreedy(BaseAlg):
         if np.random.rand() < self.params.exp_rate:
             return np.random.choice(self.graph.K)
         
-        m = self.reward.mu.argmax()
-        return self.graph.G[:,m].argmax()
+        if not self.params.graph_aware:
+            m = self.reward.mu.argmax()
+            return self.graph.G[:,m].argmax()
+        else:
+            if np.any(np.isclose(0, self.reward.gaps)):
+                return np.random.choice(self.graph.K)
+            gaps_inv_sq = 1 / self.reward.gaps ** 2
+            p = gaps_inv_sq / gaps_inv_sq.sum(-1)
+            return (self.graph.G @ p).argmax()
     
     def _backward_impl(self, experience: Experience):
         pass
