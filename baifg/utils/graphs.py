@@ -50,13 +50,12 @@ def make_loopystar_graph(p: float, q: float, r: float, K: int) -> FeedbackGraph:
     return fg
 
 def make_loopless_clique(p: float, mu: NDArray[np.float64]) -> FeedbackGraph:
-    """Creates a loopless clique where even vertices have outgoing edges
-    with probability p. non-even vertices have outgoing edges with probability 1-p.
+    """Creates a loopless clique where G_{u,u} = 0 and
+       G_{u,v} = p / u for every v!=u and v uneven, where u is the vertex index, or
+       G_{u,v} = 1-(p / u) for every v!=u and v even.
 
     Args:
-        p (float): edge probability. Even vertices have outgoing edges
-                   with probability p. non-even vertices have outgoing edges
-                   with probability 1-p.
+        p (float): edge probability parameter
         mu (NDArray[float]): average rewards for each 
 
     Returns:
@@ -66,8 +65,11 @@ def make_loopless_clique(p: float, mu: NDArray[np.float64]) -> FeedbackGraph:
     K = len(mu)
     G = np.zeros((K,K))
     idxs = np.arange(K)
-    G[:] =  np.array([1-p] * K)
-    G[idxs % 2 == 0] = np.array([p] * K)
+    for i in range(K):
+        G[i,:] = p / (i+1)
+        G[i, idxs % 2==0] = 1 - (p / (i + 1))
+    
+    G[idxs, idxs] = 0
 
     R = GaussianRewardModel(mu)
     G = Graph(G)
