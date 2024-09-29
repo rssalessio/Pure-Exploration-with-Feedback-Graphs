@@ -63,6 +63,8 @@ def evaluate_characteristic_time_gaussian(w: NDArray[np.float64], fg: FeedbackGr
     )
 
     mstar = m[astar]
+    if not np.all(m > 0):
+        print(fg.graph.G)
     assert np.all(m > 0), 'some elements in m are 0'
     idxs = np.arange(fg.K)
     gaps = gaps[idxs != astar]

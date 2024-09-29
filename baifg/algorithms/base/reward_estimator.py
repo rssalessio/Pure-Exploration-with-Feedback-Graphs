@@ -1,7 +1,7 @@
 from __future__ import annotations
 import numpy as np
 from numpy.typing import NDArray
-from baifg.algorithms.base.base_algorithm import Experience, Observable
+from baifg.model.experience import Experience, Observable
 from baifg.model.graph import Graph
 from baifg.model.reward_model import RewardModel, RewardType
 
@@ -11,6 +11,7 @@ class RewardEstimator(RewardModel):
     N: NDArray[np.float64]
     confidence: NDArray[np.float64]
     informed: bool
+    sigma = 1.0
 
     def __init__(self, K: int, informed: bool, reward_type: RewardType):
         """Initialize the reward estimator
@@ -30,11 +31,12 @@ class RewardEstimator(RewardModel):
         """Update rewards according to the observations"""
         mu = self.mu.copy()
         for obs in experience.observables:
-            for u in obs.out_vertex:
-                if self.informed or (not self.informed and not np.isclose(obs.observed_value,0)):
-                    self.M[u] += 1
-                    mu[u] = ((self.M[u]-1) * mu[u] + obs.observed_value) / self.M[u]
-    
+            u = obs.out_vertex
+            activated = obs.activated if self.informed else not np.isclose(obs.observed_value,0)
+            if activated:
+                self.M[u] += 1
+                mu[u] = ((self.M[u]-1) * mu[u] + obs.observed_value) / self.M[u]
+        
         self.confidence = np.sqrt(2 * np.log(1 + t) / np.maximum(1, self.M))
         self.update_reward(mu)
 

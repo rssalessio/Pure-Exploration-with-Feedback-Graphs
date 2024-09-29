@@ -12,12 +12,15 @@ class FeedbackGraph(object):
              + " need to have the same number of vertices"
         assert graph.K > 1, "There needs to be more than 1 vertex"
         assert len(graph.observable_vertices) == graph.K, "The graph is not observable"
-        assert sum(np.isclose(reward_model.mu,reward_model.mustar)) == 1, "The best vertex is not unique"
+        
 
         self.reward_model = reward_model
         self.graph = graph
         self.K = graph.K
 
+    @property
+    def is_best_vertex_unique(self):
+        return sum(np.isclose(self.reward_model.mu, self.reward_model.mustar)) == 1
     
        
 

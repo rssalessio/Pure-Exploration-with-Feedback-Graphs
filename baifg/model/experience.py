@@ -4,6 +4,7 @@ class Observable(NamedTuple):
     out_vertex: int
     in_vertex: int
     observed_value: float
+    activated: bool
     
     @property
     def edge(self) -> Tuple[int, int]:

@@ -4,11 +4,11 @@ from baifg.algorithms.base.graph_estimator import GraphEstimator
 class UCB(BaseAlg):
     """ Implements an UCB-like algorithm """
 
-    def __init__(self, graph: GraphEstimator):
-        super().__init__("UCB", graph)
+    def __init__(self, graph: GraphEstimator, delta: float):
+        super().__init__("UCB", graph, delta)
 
     
-    def sample(self) -> int:
+    def sample(self, time: int) -> int:
         """ Sample according to a UCB like strategy """
         
         mu_conf = self.reward.confidence

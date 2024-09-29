@@ -1,6 +1,7 @@
 import numpy as np
 from numpy.typing import NDArray
 from enum import Enum
+from typing import List
 
 class RewardType(Enum):
     NONE = "None",
@@ -26,6 +27,9 @@ class RewardModel(object):
         self.mustar = self.mu[self.astar]
         self.gaps = self.mu - self.mustar
 
+    def sample(self, idxs: List[int]) -> NDArray[np.float64]:
+        raise NotImplementedError('Sample function not implemented')
+
 class GaussianRewardModel(RewardModel):
     reward_type: RewardType = RewardType.GAUSSIAN
     sigma: float
@@ -35,7 +39,6 @@ class GaussianRewardModel(RewardModel):
         assert sigma > 0, "Sigma needs to be strictly positive"
         self.sigma = sigma
 
-
-    
-    
+    def sample(self) -> NDArray[np.float64]:
+        return np.random.normal(self.mu, scale=self.sigma)
     
