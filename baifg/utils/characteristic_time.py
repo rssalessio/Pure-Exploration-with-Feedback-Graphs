@@ -30,12 +30,12 @@ def compute_characteristic_time_gaussian(fg: FeedbackGraph) -> CharacteriticTime
     m = cp.Variable(fg.K, nonneg=True)
     p = cp.Variable(1, nonneg=True)
 
-    constraints = [cp.sum(w) == 1]
+    constraints = [cp.sum(w) == 1, m == w @ fg.graph.G]
 
     for u in range(fg.K):
-        constraints.append(
-            m[u] == cp.sum([w[v] * fg.graph.G[v,u]  for v in fg.graph.get_in_neighborhood(u)])
-        )
+        # constraints.append(
+        #     m[u] == cp.sum([w[v] * fg.graph.G[v,u]  for v in fg.graph.get_in_neighborhood(u)])
+        # )
 
         if u != astar:
             gap_u = fg.reward_model.gaps[u] ** 2
