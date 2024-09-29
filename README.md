@@ -2,13 +2,15 @@
 
 ## Libraries
 
-The following libraries are required: `numpy, tqdm, scipy, matplotlib, cvxpy, seaborn, latex`.
+The following libraries are required: `numpy, tqdm, scipy, matplotlib, cvxpy, seaborn, latex`. For a complete list, check also the `requirement.txt` file.
+
 Make sure to have latex installed to properly plot the figures.
 
 ## Example of symmetric feedback graph
 To evaluate the example of a symmetric feedback graph please refer to the notebook `example_symmetric_graph.ipynb`.
 
-
 ## Example of the loopy star graph
 To evaluate the example of a symmetric feedback graph please refer to the notebook `example_loopystar.ipynb`.
 
+## Example of the loopless clique graph
+To evaluate the example of a symmetric feedback graph please refer to the notebook `example_looplessclique.ipynb`.
