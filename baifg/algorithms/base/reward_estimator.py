@@ -26,6 +26,7 @@ class RewardEstimator(RewardModel):
         self.K = K
         self.M = np.zeros(self.K)
         self.informed = informed
+        self.confidence = np.ones(self.K)
 
     def update(self, t: int, experience: Experience):
         """Update rewards according to the observations"""

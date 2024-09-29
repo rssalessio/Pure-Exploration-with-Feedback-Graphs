@@ -28,6 +28,7 @@ class GraphEstimator(Graph):
         self.known = known
         self.N = np.zeros(self.K)
         self.Npair = np.ones((self.K, self.K))
+        self.confidence = np.ones((self.K, self.K))
 
     @staticmethod
     def from_graph(G: Graph, informed: bool, known: bool) -> GraphEstimator:
@@ -54,6 +55,6 @@ class GraphEstimator(Graph):
             
         if not self.known:
             self.update_graph(G = self.Npair / np.maximum(1, self.N[:, None]))
-            self.confidence = np.sqrt(0.5 * np.log(1 + t) / np.maximum(1, self.N))
+            self.confidence = np.sqrt(0.5 * np.log(1 + t) / np.maximum(1, self.N.repeat(self.K).reshape(-1, self.K)))
 
 

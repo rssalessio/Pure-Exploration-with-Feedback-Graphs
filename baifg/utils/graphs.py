@@ -2,6 +2,8 @@ import numpy as np
 from numpy.typing import NDArray
 from baifg.model.feedback_graph import FeedbackGraph, Graph
 from baifg.model.reward_model import GaussianRewardModel
+from typing import NamedTuple
+
 
 def make_symmetric_graph(p: float = 0.5, p_prime: float = 0.5, q: float = 1) -> FeedbackGraph:
     """Creates a symmetric graph with 3 vertices.
