@@ -46,6 +46,8 @@ class TaSFG(BaseAlg):
             except:
                 return
 
+            if sol.wstar is None:
+                return
             self.alloc = sol.wstar
             self.avg_alloc = (self.num_updates * self.avg_alloc + self.alloc) / (self.num_updates + 1)
             self.num_updates += 1 
