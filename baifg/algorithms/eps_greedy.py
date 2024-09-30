@@ -42,5 +42,5 @@ class EpsilonGreedy(BaseAlg):
             p = approximate_solution(self.reward, self.graph)
             return p.argmax()
     
-    def _backward_impl(self, experience: Experience):
+    def _backward_impl(self, time: int, experience: Experience):
         pass

@@ -35,22 +35,28 @@ class BaseAlg(ABC):
     def estimated_best_vertex(self) -> int:
         return self.reward.mu.argmax()
     
-    def should_stop(self, time: int) -> bool:
-        if time < self.K: return False
-        beta = np.log((1 + np.log(time)) / self.delta)
-        fg = FeedbackGraph(reward_model=self.reward, graph=self.graph)
-        if not fg.is_best_vertex_unique or not fg.graph.is_observable:
-            return False
+    @property
+    def feedback_graph(self) -> FeedbackGraph:
+        return FeedbackGraph(reward_model=self.reward, graph=self.graph)
 
-        Lt = time / max(1, evaluate_characteristic_time(self.N / self.N.sum(), fg))
+    @property
+    def is_model_regular(self) -> bool:
+        """ Returns true if the model is observable and best vertex is unique """
+        fg = self.feedback_graph
+        return fg.is_best_vertex_unique and fg.graph.is_observable
+    
+    def should_stop(self, time: int) -> bool:
+        if time < self.K or not self.is_model_regular: return False
+        beta = np.log((1 + np.log(time)) / self.delta)
+        Lt = time / max(1, evaluate_characteristic_time(self.N / self.N.sum(), self.feedback_graph))
         return Lt >= beta
 
     def backward(self, time: int, experience: Experience):
         self.N[experience.vertex] += 1
         self.graph.update(time, experience)
         self.reward.update(time, experience)
-        self._backward_impl(experience)
+        self._backward_impl(time, experience)
 
     @abstractmethod
-    def _backward_impl(self, experience: Experience):
+    def _backward_impl(self, time: int, experience: Experience):
         raise NotImplementedError("Backward function not implemented")

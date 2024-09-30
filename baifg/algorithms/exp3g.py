@@ -2,8 +2,7 @@ import numpy as np
 from typing import NamedTuple
 from numpy.typing import NDArray
 
-from baifg.model.feedback_graph import FeedbackGraph
-from baifg.algorithms.base.base_algorithm import BaseAlg, Experience
+from baifg.algorithms.base.base_algorithm import BaseAlg, Experience, RewardType, GraphEstimator
 
 
 class Exp3GParameters(NamedTuple):
@@ -16,8 +15,8 @@ class Exp3G(BaseAlg):
     q: NDArray[np.float64]
     p: NDArray[np.float64]
 
-    def __init__(self, fg: FeedbackGraph, parameters: Exp3GParameters, delta: float):
-        super().__init__("EXP3.G", fg, delta)
+    def __init__(self,graph: GraphEstimator, reward_type: RewardType, delta: float,  parameters: Exp3GParameters):
+        super().__init__("EXP3.G", graph, reward_type, delta)
         self.params = parameters
     
         self.q = np.ones(self.K) / self.K
@@ -27,13 +26,11 @@ class Exp3G(BaseAlg):
         self.p = (1 - self.params.exp_rate) * self.q + self.params.exp_rate / self.K
         return np.random.choice(self.K, p=self.p)
     
-    def backward(self, experience: Experience):
+    def _backward_impl(self, time: int, experience: Experience):
         losses = np.zeros(self.K)
         for obs in experience.observables:
-            assert experience.vertex == obs.in_vertex, "Experience vertex and in_vertex do not coincide"
-
             Nin_out = self.graph.in_neighborhood[obs.out_vertex]
-            Pout = self.p[Nin_out].sum()
+            Pout = self.p[list(Nin_out)].sum()
             losses[obs.out_vertex] = -obs.observed_value / Pout
         qtemp = self.q * np.exp(- self.params.learn_rate * losses)
         self.q = qtemp / qtemp.sum()
