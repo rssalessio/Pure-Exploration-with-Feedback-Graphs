@@ -17,12 +17,14 @@ class TaSFG(BaseAlg):
     params: TaSFGParameters
     avg_alloc: NDArray[np.float64]
     alloc: NDArray[np.float64]
+    num_updates: int
 
-    def __init__(self, graph: GraphEstimator, reward_type: RewardType, delta: float, parameters: EpsilonGreedyParameters):
+    def __init__(self, graph: GraphEstimator, reward_type: RewardType, delta: float, parameters: TaSFGParameters):
         super().__init__("TaSFG", graph, reward_type, delta)
         self.params = parameters
         self.avg_alloc = np.full(self.K, 1/self.K)
         self.alloc = np.full(self.K, 1/self.K)
+        self.num_updates = 0
 
     def sample(self, time: int) -> int:
         """ Sample an action """
@@ -37,9 +39,13 @@ class TaSFG(BaseAlg):
     
     def _backward_impl(self, time: int, experience: Experience):
         if self.is_model_regular and time % self.params.update_frequency == 0:
-            sol = compute_characteristic_time(
-                self.feedback_graph
-            )
+            try:
+                sol = compute_characteristic_time(
+                    self.feedback_graph
+                )
+            except:
+                return
 
             self.alloc = sol.wstar
-            self.avg_alloc = ((time - 1) * self.avg_alloc + self.alloc) / time 
+            self.avg_alloc = (self.num_updates * self.avg_alloc + self.alloc) / (self.num_updates + 1)
+            self.num_updates += 1 
