@@ -17,7 +17,7 @@ from baifg.algorithms.base.base_algorithm import BaseAlg
 from baifg.utils.graphs import make_loopless_clique, make_loopystar_graph, make_ring_graph
 from baifg.utils.characteristic_time import compute_characteristic_time
 from itertools import product
-from typing import List, NamedTuple, Tuple, Dict
+from typing import List, NamedTuple, Tuple, Dict, Callable
 from tqdm import tqdm
 from datetime import datetime
 
@@ -25,14 +25,16 @@ from datetime import datetime
 def make_dir(dir: str):
     if not os.path.exists(dir):
         os.makedirs(dir)
+        return True
+    return False
 
-def make_model(algo_name: BaseAlg, algo_params: NamedTuple, K: int, fg: FeedbackGraph, delta: float, informed: bool) -> BaseAlg:
+def make_model(algo_name: BaseAlg, algo_params: Callable[[int], NamedTuple], K: int, fg: FeedbackGraph, delta: float, informed: bool) -> BaseAlg:
     if algo_name == EpsilonGreedy:
         return EpsilonGreedy(
             GraphEstimator.optimistic_graph(K, informed=informed, known=False),
             fg.reward_model.reward_type,
             delta=delta,
-            parameters=algo_params)
+            parameters=algo_params(K))
     elif algo_name == UCB:
         return UCB(
             GraphEstimator.optimistic_graph(K, informed=informed, known=False),
@@ -43,13 +45,13 @@ def make_model(algo_name: BaseAlg, algo_params: NamedTuple, K: int, fg: Feedback
             GraphEstimator.optimistic_graph(K, informed=informed, known=False),
             reward_type=fg.reward_model.reward_type,
             delta=delta,
-            parameters=algo_params
+            parameters=algo_params(K)
         )
     elif algo_name == TaSFG:
         return TaSFG(
             GraphEstimator.optimistic_graph(K, informed=informed, known=False),
             reward_type=fg.reward_model.reward_type,
-            delta=delta, parameters=TaSFGParameters(update_frequency=2 * K)
+            delta=delta, parameters=algo_params(K)
         )
     raise Exception('Algorithm not found')
 
@@ -75,15 +77,15 @@ if __name__ == '__main__':
     envs: List[RunParameters] = []
     Kvalues = [5, 10, 15]
     delta = np.exp(-np.linspace(1, 7, 6))
-    PATH =  f"./data/{datetime.today().strftime('%Y-%m-%d')}/"
-    make_dir(PATH)
+    PATH =  f"./data/{datetime.today().strftime('%Y-%m-%d-%H-%M')}/"
 
     algorithms = [
-        (EpsilonGreedy, EpsilonGreedyParameters(exp_rate=0.25, information_greedy=False)),
-        (EpsilonGreedy, EpsilonGreedyParameters(exp_rate=0.25, information_greedy=True)),
-        (Exp3G, Exp3GParameters(exp_rate=0.25, learn_rate=0.1)),
-        (TaSFG, None),
-        (UCB, None)
+        (EpsilonGreedy, lambda K: EpsilonGreedyParameters(exp_rate=0.3, information_greedy=False)),
+        (EpsilonGreedy, lambda K: EpsilonGreedyParameters(exp_rate=0.3, information_greedy=True)),
+        (Exp3G, lambda K: Exp3GParameters(exp_rate=0.3, learn_rate=1/(2*K))),
+        (TaSFG, lambda K: TaSFGParameters(update_frequency=K*5, heuristic=False)),
+        (TaSFG, lambda K: TaSFGParameters(update_frequency=K*5, heuristic=True)),
+        (UCB, lambda K: None)
     ]
 
     for K, delta, informed in product(Kvalues, delta, [False]):
