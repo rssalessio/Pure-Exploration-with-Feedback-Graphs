@@ -19,6 +19,8 @@ from baifg.utils.characteristic_time import compute_characteristic_time
 from itertools import product
 from typing import List, NamedTuple, Tuple, Dict
 from tqdm import tqdm
+from datetime import datetime
+
 
 def make_dir(dir: str):
     if not os.path.exists(dir):
@@ -72,8 +74,9 @@ if __name__ == '__main__':
     Nsims = 100
     envs: List[RunParameters] = []
     Kvalues = [5, 10, 15]
-    delta = np.exp(-np.linspace(1, 6, 5))
-    make_dir('./data/')
+    delta = np.exp(-np.linspace(1, 7, 6))
+    PATH =  f"./data/{datetime.today().strftime('%Y-%m-%d')}/"
+    make_dir(PATH)
 
     algorithms = [
         (EpsilonGreedy, EpsilonGreedyParameters(exp_rate=0.25, information_greedy=False)),
@@ -96,7 +99,7 @@ if __name__ == '__main__':
         )
         envs.append(
             RunParameters('Ring', f'p=0.3 K={K}, delta={np.log(1/delta).round(2)}, informed={informed}', delta, informed=True,
-                        known=False, fg=make_loopystar_graph(p=0.2, q=0.25, r=0.25, K=K),
+                        known=False, fg=make_ring_graph(p=0.3, mu=np.linspace(0, 1, K)),
                         results = {})
         )
 
@@ -126,11 +129,11 @@ if __name__ == '__main__':
                             run_in_res.estimated_best_vertex == env.fg.reward_model.astar, sol.value]
 
 
-            filename = f'data/{env.name}_{env.description}.lzma'
+            filename = f'{PATH}/{env.name}_{env.description}.lzma'
             with open(filename, 'wb') as f:
                 pickle.dump({'df': df_env, 'env': env}, f)
 
-    filename = f'data/full_data.lzma'
+    filename = f'{PATH}/full_data.lzma'
     with open(filename, 'wb') as f:
         pickle.dump({'df': df, 'env': envs}, f)
     
