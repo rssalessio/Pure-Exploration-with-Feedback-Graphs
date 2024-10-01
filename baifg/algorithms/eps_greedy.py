@@ -11,7 +11,7 @@ class EpsilonGreedyParameters(NamedTuple):
     """ Exploration rate """
     exp_rate: float
     """ If false, runs basic epsilon greedy. If true
-        runs the information greedy version
+        runs the information greedy version for feedback graphs
     """
     information_greedy: bool
 
@@ -20,7 +20,7 @@ class EpsilonGreedy(BaseAlg):
     params: EpsilonGreedyParameters
 
     def __init__(self, graph: GraphEstimator, reward_type: RewardType, delta: float, parameters: EpsilonGreedyParameters):
-        super().__init__("Epsilon-greedy" + ("" if parameters.information_greedy is False else " IG"),
+        super().__init__(r"$\epsilon$-greedy" + ("" if parameters.information_greedy is False else " FG"),
                          graph, reward_type, delta)
         self.params = parameters
 

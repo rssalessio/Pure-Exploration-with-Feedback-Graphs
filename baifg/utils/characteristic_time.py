@@ -33,17 +33,13 @@ def compute_characteristic_time_gaussian(fg: FeedbackGraph) -> CharacteriticTime
     constraints = [cp.sum(w) == 1, m == w @ fg.graph.G]
 
     for u in range(fg.K):
-        # constraints.append(
-        #     m[u] == cp.sum([w[v] * fg.graph.G[v,u]  for v in fg.graph.get_in_neighborhood(u)])
-        # )
-
         if u != astar:
             gap_u = fg.reward_model.gaps[u] ** 2
             constraints.append(p >= (cp.inv_pos(m[u]) + cp.inv_pos(m[astar])) * (2 * var / gap_u))
     
     obj = cp.Minimize(p)
     problem = cp.Problem(obj, constraints)
-    sol = problem.solve(solver=cp.GUROBI)
+    sol = problem.solve(solver=cp.GUROBI, reoptimize=True)
     return CharacteriticTimeSolution(sol, w.value, m.value)
 
 

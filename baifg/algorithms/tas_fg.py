@@ -6,11 +6,12 @@ from baifg.algorithms.base.graph_estimator import GraphEstimator
 from baifg.algorithms.base.reward_estimator import RewardType
 from baifg.utils.utils import approximate_solution
 from baifg.utils.characteristic_time import compute_characteristic_time, CharacteriticTimeSolution
-
+from baifg.utils.utils import approximate_solution
 
 class TaSFGParameters(NamedTuple):
     """ Update frequency of the allocation rate """
     update_frequency: int
+    heuristic: bool
 
 class TaSFG(BaseAlg):
     """ Implements Track and Stop for Feedback Graphs """
@@ -20,7 +21,8 @@ class TaSFG(BaseAlg):
     num_updates: int
 
     def __init__(self, graph: GraphEstimator, reward_type: RewardType, delta: float, parameters: TaSFGParameters):
-        super().__init__("TaSFG", graph, reward_type, delta)
+        name = 'TaS-FG' if parameters.heuristic is False else 'TaS-FG Heur.'
+        super().__init__(name, graph, reward_type, delta)
         self.params = parameters
         self.avg_alloc = np.full(self.K, 1/self.K)
         self.alloc = np.full(self.K, 1/self.K)
@@ -39,15 +41,20 @@ class TaSFG(BaseAlg):
     
     def _backward_impl(self, time: int, experience: Experience):
         if self.is_model_regular and time % self.params.update_frequency == 0:
-            try:
-                sol = compute_characteristic_time(
-                    self.feedback_graph
-                )
-            except:
-                return
 
-            if sol.wstar is None:
+            if self.params.heuristic:
+                wstar = approximate_solution(self.feedback_graph, normalize=True)
+            else:
+                try:
+                    sol = compute_characteristic_time(
+                        self.feedback_graph
+                    )
+                    wstar = sol.wstar
+                except:
+                    return
+
+            if wstar is None:
                 return
-            self.alloc = sol.wstar
+            self.alloc = wstar
             self.avg_alloc = (self.num_updates * self.avg_alloc + self.alloc) / (self.num_updates + 1)
             self.num_updates += 1 
