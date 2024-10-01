@@ -58,7 +58,7 @@ def make_loopless_clique(p: float, mu: NDArray[np.float64]) -> FeedbackGraph:
 
     Args:
         p (float): edge probability parameter
-        mu (NDArray[float]): average rewards for each 
+        mu (NDArray[float]): average rewards for each vertex
 
     Returns:
         FeedbackGraph: Return a feedback graph object
@@ -78,3 +78,31 @@ def make_loopless_clique(p: float, mu: NDArray[np.float64]) -> FeedbackGraph:
     fg = FeedbackGraph(R, G)
     return fg
 
+
+
+def make_ring_graph(p: float, mu: NDArray[np.float64]) -> FeedbackGraph:
+    """Creates a ring graph where G_{u,v} = p if v= u+1 (0 if u+1 >=K)
+        and G_{u,v} = 1-p if v=u-1 (K-1 if u-1<0).
+
+        All other edges have 0 probability
+
+    Args:
+        p (float): edge probability parameter
+        mu (NDArray[float]): average rewards for each vertex
+
+    Returns:
+        FeedbackGraph: Return a feedback graph object
+    """
+    mu = np.array(mu).flatten()
+    K = len(mu)
+    G = np.zeros((K,K))
+    for i in range(K):
+        left = i-1 if i > 0 else K-1
+        right = i+1 if i < K-1 else 0
+        G[i, left] = 1-p
+        G[i, right] = p
+
+    R = GaussianRewardModel(mu)
+    G = Graph(G)
+    fg = FeedbackGraph(R, G)
+    return fg
