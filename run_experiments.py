@@ -14,7 +14,8 @@ from baifg.algorithms.exp3g import Exp3G, Exp3GParameters
 from baifg.algorithms.tas_fg import TaSFG, TaSFGParameters
 from baifg.algorithms.base.graph_estimator import GraphEstimator
 from baifg.algorithms.base.base_algorithm import BaseAlg
-from baifg.utils.graphs import make_loopless_clique, make_loopystar_graph
+from baifg.utils.graphs import make_loopless_clique, make_loopystar_graph, make_ring_graph
+from baifg.utils.characteristic_time import compute_characteristic_time
 from itertools import product
 from typing import List, NamedTuple, Tuple, Dict
 from tqdm import tqdm
@@ -67,11 +68,11 @@ def run_exp(seed: int, env: RunParameters,  algorithms: Tuple[BaseAlg, NamedTupl
 
 
 if __name__ == '__main__':
-    NUM_PROCESSES = 10
+    NUM_PROCESSES = 20
     Nsims = 100
     envs: List[RunParameters] = []
-    Kvalues = [5,10,15]
-    delta = np.exp(-np.linspace(1,5,4))
+    Kvalues = [5, 10, 15]
+    delta = np.exp(-np.linspace(1, 6, 5))
     make_dir('./data/')
 
     algorithms = [
@@ -93,17 +94,23 @@ if __name__ == '__main__':
                         known=False, fg=make_loopystar_graph(p=0.2, q=0.25, r=0.25, K=K),
                         results = {})
         )
+        envs.append(
+            RunParameters('Ring', f'p=0.3 K={K}, delta={np.log(1/delta).round(2)}, informed={informed}', delta, informed=True,
+                        known=False, fg=make_loopystar_graph(p=0.2, q=0.25, r=0.25, K=K),
+                        results = {})
+        )
 
     
-    df = pd.DataFrame({},  columns =  ["env", "K", "seed", "algorithm", "delta", "stopping_time", "identified_optimal_arm"])
+    df = pd.DataFrame({},  columns =  ["env", "K", "seed", "algorithm", "delta", "stopping_time", "identified_optimal_arm", "characteristic_time"])
 
     with mp.Pool(NUM_PROCESSES) as pool:
         for env in envs:
             print(f'Running {env.name} - {env.description}')
-            df_env = pd.DataFrame({},  columns =  ["env", "K", "seed", "algorithm", "delta", "stopping_time", "identified_optimal_arm"])
+            df_env = pd.DataFrame({},  columns =  ["env", "K", "seed", "algorithm", "delta", "stopping_time", "identified_optimal_arm","characteristic_time"])
 
             results = pool.starmap(run_exp, [(n, deepcopy(env), algorithms) for n in range(Nsims)])
 
+            sol = compute_characteristic_time(env.fg)
             for res in results:
                 for algo_name in res.keys():
                     if algo_name not in env.results:
@@ -113,10 +120,10 @@ if __name__ == '__main__':
                     for n, run_in_res in enumerate(res[algo_name]):
                         df.loc[len(df.index)] = [
                             env.name, env.fg.K, n, algo_name, env.delta, run_in_res.stopping_time, 
-                            run_in_res.estimated_best_vertex == env.fg.reward_model.astar]
+                            run_in_res.estimated_best_vertex == env.fg.reward_model.astar, sol.value]
                         df_env.loc[len(df.index)] = [
                             env.name, env.fg.K, n, algo_name, env.delta, run_in_res.stopping_time, 
-                            run_in_res.estimated_best_vertex == env.fg.reward_model.astar]
+                            run_in_res.estimated_best_vertex == env.fg.reward_model.astar, sol.value]
 
 
             filename = f'data/{env.name}_{env.description}.lzma'
