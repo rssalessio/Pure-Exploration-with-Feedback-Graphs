@@ -7,8 +7,8 @@ To run the experiments, see instructions below.
 
 ## Libraries
 
--Language: Python 3.10.12
--The following libraries are required: `pandas, numpy, tqdm, scipy, matplotlib, cvxpy, seaborn, latex, multipledispatch`. For a complete list, check also the `requirements.txt` file.
+- **Language**: Python 3.10.12
+- **Libraries**: The following libraries are required: `pandas, numpy, tqdm, scipy, matplotlib, cvxpy, seaborn, latex, multipledispatch jupyter`. For a complete list, check also the `requirements.txt` file.
 
 We suggest to create a `venv` environment, activate it and install the libraries using the command `python -m pip install -r requirements.txt`
 
@@ -35,4 +35,4 @@ Adjust the variables:
 All the data will be saved in the `data` folder, within a folder with the current date
 in the format `%Y-%m-%d-%H-%M`. All the data will be saved in a lzma file named `full_data.lzma`.
 
-To plot the results, run the notebook `plot_data.ipynb`. Set the `path = 'data/{YOUR FOLDER}/full_data.lzma` variable at the beginning to point to the correct folder.
+To plot the results, run the notebook `plot_data.ipynb`. Set the `path = "data/{FOLDER}/full_data.lzma"` variable at the beginning to point to the correct folder.
