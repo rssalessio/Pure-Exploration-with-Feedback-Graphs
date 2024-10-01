@@ -5,14 +5,15 @@ Best Arm Identification with Feedback Graphs. Please, refer to the main paper fo
 To run the experiments, see instructions below.
 
 
-## Libraries
+## Libraries and optimizers
 
 - **Language**: Python 3.10.12
-- **Libraries**: The following libraries are required: `pandas, numpy, tqdm, scipy, matplotlib, cvxpy, seaborn, latex, multipledispatch jupyter`. For a complete list, check also the `requirements.txt` file.
-
-We suggest to create a `venv` environment, activate it and install the libraries using the command `python -m pip install -r requirements.txt`
+- **Libraries**: The following libraries are required: `pandas, numpy, tqdm, scipy, matplotlib, cvxpy, seaborn, latex, multipledispatch jupyter`. For a complete list, check also the `requirements.txt` file. We suggest to create a `venv` environment, activate it and install the libraries using the command `python -m pip install -r requirements.txt`
+- **Optimizers**: We suggest to use the GUROBI optimizer. The original figures were obtained using GUROBI 10. To change the optimizer, change the solver in `baifg\utils\characteristic_time.py`
+whenever the function `cp.solve(solver=cp.GUROBI)` is called. We suggest using CLARABEL (`cp.CLARABEL`) as an alternative. 
 
 Make sure to have latex installed to properly plot the figures (e.g. MikTEX).
+
 
 ## Example of symmetric feedback graph
 To evaluate the example of a symmetric feedback graph please refer to the notebook `example_symmetric_graph.ipynb`.
