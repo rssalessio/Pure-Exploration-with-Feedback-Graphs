@@ -109,9 +109,11 @@ if __name__ == '__main__':
                         known=False, fg=make_ring_graph(p=0.3, mu=np.linspace(0, 1, K)),
                         results = {})
         )
+        q=0.25
+        r = 0.25*(1-2*quit)/(K-1)
         envs.append(
-            RunParameters('Loopystar (hard)', f'p=0.2, q=0.25, r=0.25 K={K}, delta={np.log(1/delta).round(2)}, informed={informed}', delta, informed=True,
-                        known=False, fg=make_loopystar_graph(p=0., q=0.25, r=0.25*(1-2*0.25)/(K-1), K=K, a1_optimal=True),
+            RunParameters('Loopystar (hard)', f'p=0, q=0.25, r={np.round(r,2)} K={K}, delta={np.log(1/delta).round(2)}, informed={informed}', delta, informed=True,
+                        known=False, fg=make_loopystar_graph(p=0., q=q, r=r, K=K, a1_optimal=True),
                         results = {})
         )
 
