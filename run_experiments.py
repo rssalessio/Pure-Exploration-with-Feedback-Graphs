@@ -76,7 +76,7 @@ def run_exp(seed: int, env: RunParameters,  algorithms: Tuple[BaseAlg, NamedTupl
 
 
 if __name__ == '__main__':
-    NUM_PROCESSES = 20
+    NUM_PROCESSES = 25
     Nsims = 100
     envs: List[RunParameters] = []
     Kvalues = [5, 10, 15]

@@ -5,7 +5,7 @@ class UCB(BaseAlg):
     """ Implements an UCB-like algorithm """
 
     def __init__(self, graph: GraphEstimator, reward_type: RewardType, delta: float):
-        super().__init__("UCB", graph, reward_type, delta)
+        super().__init__("UCB-FG", graph, reward_type, delta)
 
     
     def sample(self, time: int) -> int:
@@ -14,8 +14,11 @@ class UCB(BaseAlg):
         mu_conf = self.reward.confidence
         g_conf = self.graph.confidence
 
-        m = (self.reward.mu + mu_conf).argmax()
-        return (self.graph.G[:,m] + g_conf[:, m]).argmax()
+        mu = self.reward.mu + mu_conf
+        G = self.graph.G + g_conf
+        return (G @ mu).argmax()
+        #m = (self.reward.mu + mu_conf).argmax()
+        #return (self.graph.G[:,m] + g_conf[:, m]).argmax()
     
     def _backward_impl(self, time: int, experience: Experience):
         pass
