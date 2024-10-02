@@ -26,7 +26,7 @@ def make_symmetric_graph(p: float = 0.5, p_prime: float = 0.5, q: float = 1) -> 
     fg = FeedbackGraph(R, G)
     return fg
 
-def make_loopystar_graph(p: float, q: float, r: float, K: int) -> FeedbackGraph:
+def make_loopystar_graph(p: float, q: float, r: float, K: int, a1_optimal: bool = False) -> FeedbackGraph:
     """Create a loopystar graph with rewards 0.5 for non-optimal arm
        and reward 1 for the optimal arm.
 
@@ -36,6 +36,8 @@ def make_loopystar_graph(p: float, q: float, r: float, K: int) -> FeedbackGraph:
         q (float): probability of G[0,0]
         r (float): probability of G[0,i] with i != astar
         K (int): number of vertices
+        a1_optimal (bool): if true, sets the first vertex to be the optimal one, otherwise
+                           it's the last vertex. Defaults to False.
 
     Returns:
         FeedbackGraph: Feedback graph object
@@ -45,7 +47,8 @@ def make_loopystar_graph(p: float, q: float, r: float, K: int) -> FeedbackGraph:
     G[1:,1:] = np.eye(K-1) * max(0, 1-2*p)
     G[-1,-1] = 1-p
 
-    R = GaussianRewardModel([0.5] * (K-1) + [1])
+    rewards = [0.5] * (K-1) + [1] if a1_optimal is False else [1]+[0.5] * (K-1)
+    R = GaussianRewardModel(rewards)
 
     G = Graph(G)
     fg = FeedbackGraph(R, G)
@@ -106,3 +109,5 @@ def make_ring_graph(p: float, mu: NDArray[np.float64]) -> FeedbackGraph:
     G = Graph(G)
     fg = FeedbackGraph(R, G)
     return fg
+
+

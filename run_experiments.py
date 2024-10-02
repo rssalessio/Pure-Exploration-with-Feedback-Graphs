@@ -109,6 +109,11 @@ if __name__ == '__main__':
                         known=False, fg=make_ring_graph(p=0.3, mu=np.linspace(0, 1, K)),
                         results = {})
         )
+        envs.append(
+            RunParameters('Loopystar (hard)', f'p=0.2, q=0.25, r=0.25 K={K}, delta={np.log(1/delta).round(2)}, informed={informed}', delta, informed=True,
+                        known=False, fg=make_loopystar_graph(p=0., q=0.25, r=0.25*(1-2*0.25)/(K-1), K=K, a1_optimal=True),
+                        results = {})
+        )
 
     
     df = pd.DataFrame({},  columns =  ["env", "K", "seed", "algorithm", "delta", "stopping_time", "identified_optimal_arm", "characteristic_time"])
