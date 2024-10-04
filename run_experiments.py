@@ -151,13 +151,13 @@ if __name__ == '__main__':
 
 
             filename = f'{PATH}/{env.name}_{env.description}.lzma'
-            with open(filename, 'wb') as f:
+            with lzma.open(filename, 'wb') as f:
                 pickle.dump({'df': df_env, 'env': env}, f)
 
     
     filename = f'{PATH}/full_data.lzma'
     logging.info(f'Saving all data to folder f{PATH}')
-    with open(filename, 'wb') as f:
+    with lzma.open(filename, 'wb') as f:
         pickle.dump({'df': df, 'env': envs}, f)
     
         
