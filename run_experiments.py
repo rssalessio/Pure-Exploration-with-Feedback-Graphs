@@ -20,7 +20,13 @@ from itertools import product
 from typing import List, NamedTuple, Tuple, Dict, Callable, Type
 from tqdm import tqdm
 from datetime import datetime
+import logging
 
+logging.basicConfig(
+    level=logging.INFO,
+    format='%(asctime)s - %(levelname)s - %(message)s',
+    datefmt='%Y-%m-%d %H:%M:%S'
+)
 
 def make_dir(dir: str):
     if not os.path.exists(dir):
@@ -76,8 +82,8 @@ def run_exp(seed: int, env: RunParameters,  algorithms: Tuple[BaseAlg, NamedTupl
 
 
 if __name__ == '__main__':
-    NUM_PROCESSES = 25
-    Nsims = 100
+    NUM_PROCESSES = 5
+    Nsims = 5
     envs: List[RunParameters] = []
     Kvalues = [5, 10, 15]
     delta = np.exp(-np.linspace(1, 7, 6))
@@ -122,7 +128,7 @@ if __name__ == '__main__':
 
     with mp.Pool(NUM_PROCESSES) as pool:
         for env in envs:
-            print(f'Running {env.name} - {env.description}')
+            logging.info(f'Simulating environment {env.name} - {env.description}')
             df_env = pd.DataFrame({},  columns =  ["env", "K", "seed", "algorithm", "delta", "stopping_time", "identified_optimal_arm","characteristic_time"])
 
             results = pool.starmap(run_exp, [(n, deepcopy(env), algorithms) for n in range(Nsims)])
@@ -130,6 +136,7 @@ if __name__ == '__main__':
             sol = compute_characteristic_time(env.fg)
             for res in results:
                 for algo_name in res.keys():
+                    logging.info(f'> Running algorithm {algo_name}')
                     if algo_name not in env.results:
                         env.results[algo_name] = []
                     env.results[algo_name].extend(res[algo_name])
@@ -147,7 +154,9 @@ if __name__ == '__main__':
             with open(filename, 'wb') as f:
                 pickle.dump({'df': df_env, 'env': env}, f)
 
+    
     filename = f'{PATH}/full_data.lzma'
+    logging.info(f'Saving all data to folder f{PATH}')
     with open(filename, 'wb') as f:
         pickle.dump({'df': df, 'env': envs}, f)
     
