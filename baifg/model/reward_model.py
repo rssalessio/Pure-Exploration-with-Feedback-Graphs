@@ -25,8 +25,8 @@ class RewardModel(object):
         self.mu = mu.flatten().copy()
         self.astar = np.argmax(self.mu)
         self.mustar = self.mu[self.astar]
-        self.gaps = self.mu - self.mustar
-        self.gaps[self.astar] = self.gaps.min()
+        self.gaps = self.mustar - self.mu 
+        self.gaps[self.astar] = self.gaps[self.gaps > 0].min()
 
     def sample(self, idxs: List[int]) -> NDArray[np.float64]:
         raise NotImplementedError('Sample function not implemented')
