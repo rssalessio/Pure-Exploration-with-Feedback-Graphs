@@ -20,8 +20,8 @@ def approximate_solution(reward_model: RewardModel, graph: Graph, normalize: boo
     """
     if np.any(np.isclose(0, reward_model.gaps)):
         return np.full(graph.K, 1/graph.K)
-    gaps_inv_sq = 1 / reward_model.gaps ** 2
-    p = gaps_inv_sq / gaps_inv_sq.sum(-1)
+    gaps_inv_sq = 1 / (reward_model.gaps ** 2)
+    p = gaps_inv_sq
     w = graph.G @ p
 
     if normalize:
