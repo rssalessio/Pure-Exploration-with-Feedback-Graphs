@@ -82,8 +82,8 @@ def run_exp(seed: int, env: RunParameters,  algorithms: Tuple[BaseAlg, NamedTupl
 
 
 if __name__ == '__main__':
-    NUM_PROCESSES = 5
-    Nsims = 5
+    NUM_PROCESSES = 30
+    Nsims = 100
     envs: List[RunParameters] = []
     Kvalues = [5, 10, 15]
     delta = np.exp(-np.linspace(1, 7, 6))
