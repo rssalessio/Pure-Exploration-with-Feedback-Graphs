@@ -18,8 +18,11 @@ Make sure to have latex installed to properly plot the figures (e.g. MikTEX).
 ## Example of symmetric feedback graph
 To evaluate the example of a symmetric feedback graph please refer to the notebook `example_symmetric_graph.ipynb`.
 
-## Example of the loopy star graph
+## Example of the loopy star graphs
 To evaluate the example of a symmetric feedback graph please refer to the notebook `example_loopystar.ipynb`.
+
+For the hard example refer to the notebook `example_loopystar_hard.ipynb`.
+
 
 ## Example of the loopless clique graph
 To evaluate the example of a symmetric feedback graph please refer to the notebook `example_looplessclique.ipynb`.

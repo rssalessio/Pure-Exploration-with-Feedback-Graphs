@@ -49,7 +49,7 @@ def make_model(algo_name: Type[BaseAlg], algo_params: Dict[str, float | int | bo
             GraphEstimator.optimistic_graph(K, informed=informed, known=False),
             reward_type=fg.reward_model.reward_type,
             delta=delta,
-            parameters= Exp3GParameters(exp_rate=0.3, learn_rate=1/(2*K), **algo_params)
+            parameters= Exp3GParameters(exp_rate=0.3, learn_rate=1/(K), **algo_params)
         )
     elif algo_name == TaSFG:
         return TaSFG(
