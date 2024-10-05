@@ -25,8 +25,8 @@ class BaseAlg(ABC):
         self.K = graph.K
         self.delta = delta
 
-    @abstractmethod
     @property
+    @abstractmethod
     def NAME(self) -> str:
         raise NotImplementedError('Name property not implemented')
 
