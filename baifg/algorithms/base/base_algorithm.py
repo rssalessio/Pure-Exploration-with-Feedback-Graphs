@@ -11,21 +11,24 @@ from numpy.typing import NDArray
 
 class BaseAlg(ABC):
     """ Base algorithm class """
-    NAME: str
     graph: GraphEstimator
     reward: RewardEstimator
     N: NDArray[np.float64]
     K: int
     delta: float
 
-    def __init__(self, name: str, graph: GraphEstimator, reward_type: RewardType, delta: float):
+    def __init__(self, graph: GraphEstimator, reward_type: RewardType, delta: float):
         assert delta > 0, 'delta needs to be strictly positive'
-        self.NAME = name
         self.graph = graph
         self.reward = RewardEstimator(graph.K, informed=graph.informed, reward_type=reward_type)
         self.N = np.zeros(graph.K) 
         self.K = graph.K
         self.delta = delta
+
+    @abstractmethod
+    @property
+    def NAME(self) -> str:
+        raise NotImplementedError('Name property not implemented')
 
     @abstractmethod
     def sample(self, time: int) -> int:

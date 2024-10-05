@@ -16,11 +16,15 @@ class Exp3G(BaseAlg):
     p: NDArray[np.float64]
 
     def __init__(self,graph: GraphEstimator, reward_type: RewardType, delta: float,  parameters: Exp3GParameters):
-        super().__init__("EXP3.G", graph, reward_type, delta)
+        super().__init__(graph, reward_type, delta)
         self.params = parameters
     
         self.q = np.ones(self.K) / self.K
         self.p = np.ones(self.K) / self.K
+
+    @property
+    def NAME(self) -> str:
+        return "EXP3.G"
     
     def sample(self, time: int) -> int:
         self.p = (1 - self.params.exp_rate) * self.q + self.params.exp_rate / self.K

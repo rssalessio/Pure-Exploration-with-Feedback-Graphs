@@ -39,7 +39,7 @@ def compute_characteristic_time_gaussian(fg: FeedbackGraph) -> CharacteriticTime
     
     obj = cp.Minimize(p)
     problem = cp.Problem(obj, constraints)
-    sol = problem.solve(solver=cp.CLARABEL)#, reoptimize=True)
+    sol = problem.solve(solver=cp.GUROBI, reoptimize=True)
     return CharacteriticTimeSolution(sol, w.value, m.value)
 
 
