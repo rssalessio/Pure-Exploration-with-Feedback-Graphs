@@ -12,6 +12,7 @@ from baifg.algorithms.eps_greedy import EpsilonGreedy, EpsilonGreedyParameters
 from baifg.algorithms.ucb import UCB
 from baifg.algorithms.exp3g import Exp3G, Exp3GParameters
 from baifg.algorithms.tas_fg import TaSFG, TaSFGParameters
+from baifg.algorithms.ucb import UCBParameters
 from baifg.algorithms.base.graph_estimator import GraphEstimator
 from baifg.algorithms.base.base_algorithm import BaseAlg
 from baifg.utils.graphs import make_loopless_clique, make_loopystar_graph, make_ring_graph
@@ -49,7 +50,8 @@ def make_model(algo_name: Type[BaseAlg], algo_params: Dict[str, float | int | bo
         return UCB(
             GraphEstimator.optimistic_graph(K, informed=informed, known=False),
             reward_type=fg.reward_model.reward_type,
-            delta=delta)
+            delta=delta,
+            parameters=UCBParameters(**algo_params))
     elif algo_name == Exp3G:
         return Exp3G(
             GraphEstimator.optimistic_graph(K, informed=informed, known=False),
@@ -96,7 +98,8 @@ if __name__ == '__main__':
         (Exp3G, {}),
         (TaSFG, {'heuristic': False}),
         (TaSFG, {'heuristic': True}),
-        (UCB, {})
+        (UCB, {"greedy_wrt_connected_edges": False}),
+        (UCB, {"greedy_wrt_connected_edges": True})
     ]
 
     for K, delta, informed in product(Kvalues, delta, [False]):
