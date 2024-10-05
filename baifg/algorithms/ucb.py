@@ -16,9 +16,8 @@ class UCB(BaseAlg):
 
         mu = self.reward.mu + mu_conf
         G = self.graph.G + g_conf
-        return (G @ mu).argmax()
-        #m = (self.reward.mu + mu_conf).argmax()
-        #return (self.graph.G[:,m] + g_conf[:, m]).argmax()
+        m = mu.argmax()
+        return G[:,m].argmax()
     
     def _backward_impl(self, time: int, experience: Experience):
         pass

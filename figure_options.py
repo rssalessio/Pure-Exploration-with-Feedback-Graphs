@@ -4,9 +4,9 @@ import seaborn as sns
 plt.rc('font', **{'family': 'serif', 'serif': ['Computer Modern']})
 plt.rc('text', usetex=True)
 plt.rc('pgf', rcfonts=False)
-SMALL_SIZE = 12
-MEDIUM_SIZE = 14
-BIGGER_SIZE = 18
+SMALL_SIZE = 14
+MEDIUM_SIZE = 16
+BIGGER_SIZE = 20
 
 color_blue = '#1a54a6'
 color_red = '#1b51g6'

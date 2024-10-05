@@ -118,7 +118,7 @@ if __name__ == '__main__':
         q=0.25
         r = 0.25*(1-2*q)/(K-1)
         envs.append(
-            RunParameters('Loopystar (hard)', f'p=0, q=0.25, r={np.round(r,2)} K={K}, delta={np.log(1/delta).round(2)}, informed={informed}', delta, informed=True,
+            RunParameters('Loopystar (alt.)', f'p=0, q=0.25, r={np.round(r,2)} K={K}, delta={np.log(1/delta).round(2)}, informed={informed}', delta, informed=True,
                         known=False, fg=make_loopystar_graph(p=0., q=q, r=r, K=K, a1_optimal=True),
                         results = {})
         )
