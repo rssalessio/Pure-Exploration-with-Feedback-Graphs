@@ -20,9 +20,12 @@ class EpsilonGreedy(BaseAlg):
     params: EpsilonGreedyParameters
 
     def __init__(self, graph: GraphEstimator, reward_type: RewardType, delta: float, parameters: EpsilonGreedyParameters):
-        super().__init__(r"$\epsilon$-greedy" + ("" if parameters.information_greedy is False else " FG"),
-                         graph, reward_type, delta)
+        super().__init__(graph, reward_type, delta)
         self.params = parameters
+
+    @property
+    def NAME(self) -> str:
+        return r"$\epsilon$-greedy" + ("" if self.params.information_greedy is False else " FG")
 
     def sample(self, time: int) -> int:
         """ Sample according to epsilon-greedy strategy. 

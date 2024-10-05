@@ -21,12 +21,15 @@ class TaSFG(BaseAlg):
     num_updates: int
 
     def __init__(self, graph: GraphEstimator, reward_type: RewardType, delta: float, parameters: TaSFGParameters):
-        name = 'TaS-FG' if parameters.heuristic is False else 'TaS-FG Heur.'
-        super().__init__(name, graph, reward_type, delta)
+        super().__init__(graph, reward_type, delta)
         self.params = parameters
         self.avg_alloc = np.full(self.K, 1/self.K)
         self.alloc = np.full(self.K, 1/self.K)
         self.num_updates = 0
+
+    @property
+    def NAME(self) -> str:
+        return 'TaS-FG' if self.params.heuristic is False else 'TaS-FG Heur.'
 
     def sample(self, time: int) -> int:
         """ Sample an action """
