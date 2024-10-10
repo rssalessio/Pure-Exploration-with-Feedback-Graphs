@@ -24,6 +24,7 @@ class BaseAlg(ABC):
         self.N = np.zeros(graph.K) 
         self.K = graph.K
         self.delta = delta
+        self.Cexp = lambda x: x #+ 4 * np.log(1+x+np.sqrt(2*x))
 
     @property
     @abstractmethod
@@ -50,7 +51,9 @@ class BaseAlg(ABC):
     
     def should_stop(self, time: int) -> bool:
         if time < self.K or not self.is_model_regular: return False
-        beta = np.log((1 + np.log(time)) / self.delta)
+        beta1 = np.log(1+np.log(time + 1))
+        beta2 = self.Cexp(0.5* np.log((self.K-1)/self.delta))
+        beta = np.log((self.K-1)/self.delta) + 3*np.log(1+np.log(max(1,time)))
         Lt = time / max(1, evaluate_characteristic_time(self.N / self.N.sum(), self.feedback_graph))
         return Lt >= beta
 

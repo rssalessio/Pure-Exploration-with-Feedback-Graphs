@@ -84,8 +84,8 @@ def run_exp(seed: int, env: RunParameters,  algorithms: Tuple[BaseAlg, NamedTupl
 
 
 if __name__ == '__main__':
-    NUM_PROCESSES = 30
-    Nsims = 100
+    NUM_PROCESSES = 25
+    Nsims = 25
     envs: List[RunParameters] = []
     Kvalues = [5, 10, 15]
     delta = np.exp(-np.linspace(1, 7, 6))
@@ -93,8 +93,8 @@ if __name__ == '__main__':
 
     make_dir(PATH)
     algorithms = [
-        (EpsilonGreedy, {'information_greedy': False}),
-        (EpsilonGreedy, {'information_greedy': True}),
+        # (EpsilonGreedy, {'information_greedy': False}),
+        # (EpsilonGreedy, {'information_greedy': True}),
         (Exp3G, {}),
         (TaSFG, {'heuristic': False}),
         (TaSFG, {'heuristic': True}),
