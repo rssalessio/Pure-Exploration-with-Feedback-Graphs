@@ -19,16 +19,16 @@ Make sure to have latex installed to properly plot the figures (e.g. MikTEX).
 To evaluate the example of a symmetric feedback graph please refer to the notebook `example_symmetric_graph.ipynb`.
 
 ## Example of the loopy star graphs
-To evaluate the example of a symmetric feedback graph please refer to the notebook `example_loopystar.ipynb`.
+To evaluate the loopy star graph (as in App. A.1) please refer to the notebook `example_loopystar.ipynb`.
 
-For the hard example refer to the notebook `example_loopystar_hard.ipynb`.
+For the alternative loopy star example refer to the notebook `example_loopystar_alt.ipynb`.
 
 
 ## Example of the loopless clique graph
-To evaluate the example of a symmetric feedback graph please refer to the notebook `example_looplessclique.ipynb`.
+To evaluate the loopless clique graph (as in App. A.1)  please refer to the notebook `example_looplessclique.ipynb`.
 
 ## Example of the ring graph
-To evaluate the example of a symmetric feedback graph please refer to the notebook `example_rin.ipynb`.
+To evaluate the ring graph (as in App. A.1)  please refer to the notebook `example_rin.ipynb`.
 
 ## To run the simulations and plot the main numerical results
 To run the main simulations, refer to the python file `run_experiments.py`.
