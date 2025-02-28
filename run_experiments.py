@@ -93,8 +93,6 @@ if __name__ == '__main__':
 
     make_dir(PATH)
     algorithms = [
-        # (EpsilonGreedy, {'information_greedy': False}),
-        # (EpsilonGreedy, {'information_greedy': True}),
         (Exp3G, {}),
         (TaSFG, {'heuristic': False}),
         (TaSFG, {'heuristic': True}),
