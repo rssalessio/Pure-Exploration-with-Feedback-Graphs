@@ -53,7 +53,7 @@ class BaseAlg(ABC):
         if time < self.K or not self.is_model_regular: return False
         beta1 = np.log(1+np.log(time + 1))
         beta2 = self.Cexp(0.5* np.log((self.K-1)/self.delta))
-        beta = np.log((self.K-1)/self.delta) + 3*np.log(1+np.log(max(1,time)))
+        beta = np.log((self.K-1)/self.delta) + 2*np.log(1+np.log(max(1,time)))
         Lt = time / max(1, evaluate_characteristic_time(self.N / self.N.sum(), self.feedback_graph))
         return Lt >= beta
 
