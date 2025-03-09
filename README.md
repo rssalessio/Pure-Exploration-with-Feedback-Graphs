@@ -1,8 +1,10 @@
 # Pure-Exploration-with-Feedback-Graph
 
-Pure Exploration with Feedback Graphs. 
-Authors: Alessio Russo, Yichen Song, Aldo Pacchiano.
-License: MIT
+Pure Exploration with Feedback Graphs, AISTATS 2025.
+
+*Authors*: Alessio Russo, Yichen Song, Aldo Pacchiano.
+
+*License*: MIT
 
 Please, refer to the main paper for more details.
 
