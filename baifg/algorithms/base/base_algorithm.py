@@ -51,9 +51,11 @@ class BaseAlg(ABC):
     
     def should_stop(self, time: int) -> bool:
         if time < self.K or not self.is_model_regular: return False
-        beta1 = np.log(1+np.log(max(1, time/2))) # time
-        beta0 = self.Cexp(0.5* np.log((self.K-1)/self.delta))
-        beta = 2*beta0 + 3*beta1 # before was 2
+
+        beta1 = np.log(1+2 * np.log(max(1, time)))
+        beta0 = self.Cexp(0.5* np.log(1/self.delta))
+        beta = 2*beta0 + 3*beta1
+
         Lt = time / max(1, evaluate_characteristic_time(self.N / self.N.sum(), self.feedback_graph))
         return Lt >= beta
 
