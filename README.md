@@ -1,6 +1,10 @@
-# Best-Arm-Identification-with-Feedback-Graph
+# Pure-Exploration-with-Feedback-Graph
 
-Best Arm Identification with Feedback Graphs. Please, refer to the main paper for more details.
+Pure Exploration with Feedback Graphs. 
+Authors: Alessio Russo, Yichen Song, Aldo Pacchiano.
+License: MIT
+
+Please, refer to the main paper for more details.
 
 To run the experiments, see instructions below.
 
@@ -28,7 +32,7 @@ For the alternative loopy star example refer to the notebook `example_loopystar_
 To evaluate the loopless clique graph (as in App. A.1)  please refer to the notebook `example_looplessclique.ipynb`.
 
 ## Example of the ring graph
-To evaluate the ring graph (as in App. A.1)  please refer to the notebook `example_rin.ipynb`.
+To evaluate the ring graph (as in App. A.1)  please refer to the notebook `example_ring.ipynb`.
 
 ## To run the simulations and plot the main numerical results
 To run the main simulations, refer to the python file `run_experiments.py`.
